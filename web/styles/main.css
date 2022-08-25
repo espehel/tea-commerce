@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .outline-button {
+    @apply bg-transparent hover:bg-red-500 text-red-800 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded;
+  }
+}

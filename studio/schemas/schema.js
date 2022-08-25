@@ -9,7 +9,7 @@ import category from "./category";
 import product from "./product";
 import vendor from "./vendor";
 import productVariant from "./productVariant";
-import merch from "./merch";
+import merch from "./simple-product";
 
 import localeString from "./locale/String";
 import localeText from "./locale/Text";

@@ -33,7 +33,7 @@ export const action: ActionFunction = async ({ request }) => {
       throw new Error('Invalid form data');
     }
     const cartDetails = JSON.parse(formData);
-    //Sanity client performs merchQuery
+    //Sanity client performs categoryQuery
     let sanityData = await client.fetch(merchQuery);
     // The POST request is then validated against the data from Sanity.
     const line_items = validateCartItems(sanityData, cartDetails);

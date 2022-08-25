@@ -1,6 +1,6 @@
 export default {
-  name: "merch",
-  title: "Merch",
+  name: "simple-product",
+  title: "Simple Product",
   type: "document",
   fields: [
     {
@@ -19,6 +19,17 @@ export default {
       type: "text",
     },
     {
+      name: "categories",
+      title: "Categories",
+      type: "array",
+      of: [
+        {
+          type: "reference",
+          to: { type: "category" },
+        },
+      ],
+    },
+    {
       name: "price",
       title: "Price",
       description: "For now, add cents as zeroes, ie 500 = $5",
@@ -27,7 +38,6 @@ export default {
     {
       name: "currency",
       title: "Currency",
-      description: "Keep this 'usd' for the purposes of this tutorial",
       type: "string",
     },
     {
