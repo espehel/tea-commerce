@@ -21,3 +21,15 @@ export const getProducts = groq`
     currency,
     category
   }`;
+
+export const getProductBySKU = (sku: string | undefined) => groq`
+*[_type=="simple-product" && sku=="${sku}"]{
+    name,
+    sku,
+    description,
+    price,
+    "id": _id,
+    "image": image.asset->url,
+    currency,
+    category
+  }`;

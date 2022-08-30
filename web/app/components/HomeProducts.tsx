@@ -24,8 +24,8 @@ const HomeProducts: FC<Props> = ({ products }) => {
       </div>
       <ul className="flex gap-4 mt-4">
         {products.slice(0, 4).map((product) => (
-          <li>
-            <Link to="/">
+          <li key={product.sku}>
+            <Link to={`products/${product.sku}`}>
               <Card sx={{ minHeight: 200, minWidth: 200 }}>
                 <CardCover>
                   <img src={product.image} alt="" />

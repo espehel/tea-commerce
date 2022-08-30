@@ -1,8 +1,20 @@
-import type { LinksFunction, MetaFunction } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import type { LinksFunction, LoaderArgs, MetaFunction } from '@remix-run/node';
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+} from '@remix-run/react';
 import styles from './styles/app.css';
 import Header from './components/Header';
 import { studioTheme, ThemeProvider } from '@sanity/ui';
+import { CssVarsProvider } from '@mui/joy/styles';
+import CartProvider from '~/contexts/CartProvider';
+import { json } from '@remix-run/node';
+import invariant from 'tiny-invariant';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -14,7 +26,18 @@ export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: styles }];
 };
 
+export async function loader({ request, params }: LoaderArgs) {
+  invariant(process.env.STRIPE_PUBLIC_KEY, 'Missing "process.env.STRIPE_PUBLIC_KEY"');
+  return json({
+    ENV: {
+      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+    },
+  });
+}
+
 export default function App() {
+  const { ENV } = useLoaderData<typeof loader>();
+
   return (
     <html lang="en">
       <head>
@@ -22,12 +45,16 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <ThemeProvider theme={studioTheme}>
-          <Header />
-          <main>
-            <Outlet />
-          </main>
-        </ThemeProvider>
+        <CssVarsProvider>
+          <ThemeProvider theme={studioTheme}>
+            <CartProvider stripePublicKey={ENV.STRIPE_PUBLIC_KEY}>
+              <Header />
+              <main>
+                <Outlet />
+              </main>
+            </CartProvider>
+          </ThemeProvider>
+        </CssVarsProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
