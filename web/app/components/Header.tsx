@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { NavLink } from '@remix-run/react';
+import { Link, NavLink } from '@remix-run/react';
 import { HeartIcon, SearchIcon, TrolleyIcon } from '@sanity/icons';
 
 const Header: FC = () => {
@@ -31,7 +31,9 @@ const Header: FC = () => {
       <div className="flex gap-2 text-2xl">
         <SearchIcon />
         <HeartIcon />
-        <TrolleyIcon />
+        <Link to="/cart">
+          <TrolleyIcon />
+        </Link>
       </div>
     </header>
   );

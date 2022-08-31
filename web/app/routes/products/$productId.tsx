@@ -19,11 +19,10 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 const ProductRoute: FC = ({}) => {
-  const { addItem, cartDetails } = useShoppingCart();
+  const { addItem } = useShoppingCart();
   const { product } = useLoaderData<typeof loader>();
   const [quantity, setQuantity] = useState(1);
 
-  console.log(cartDetails);
   return (
     <article className="max-w-4xl m-auto text-center">
       <Typography level="display1" component="h2">
