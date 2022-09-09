@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Link } from '@remix-run/react';
 import { Category } from '../../lib/sanity/categoryQuery';
 import { Card, Text } from '@sanity/ui';
+import { Button } from '@mui/joy';
 
 interface Props {
   categories: Array<Category>;
