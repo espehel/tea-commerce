@@ -24,6 +24,7 @@
     "@stripe/stripe-js": "^1.35.0",
     "cross-env": "^7.0.3",
     "groq": "^2.29.3",
+    "node-mailjet": "^5.1.1",
     "prettier": "^2.7.1",
     "react": "^17.x.x",
     "react-dom": "17.x.x",
