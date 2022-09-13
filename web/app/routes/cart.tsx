@@ -5,23 +5,19 @@ import { Button } from '@mui/joy';
 import { useSubmit } from '@remix-run/react';
 import { ActionFunction, json, redirect } from '@remix-run/node';
 import invariant from 'tiny-invariant';
-import { client } from '../../lib/sanity/client';
 import { getProducts } from '../../lib/sanity/simpleProductQuery';
-import { createStripeSession } from '../../lib/stripe/stripe.server';
-import { ValidatedItem } from 'use-shopping-cart/utilities/serverless';
-const { validateCartItems } = require('use-shopping-cart/utilities');
+import { createStripeSession, validateCartItems } from '../../lib/stripe/stripe.server';
+import { postOrder } from '../../lib/sanity/orders';
+import { toCartEntries } from '../../lib/stripe/stripe-mapper';
 
 export const action: ActionFunction = async ({ request }) => {
   try {
     // Validate the cart details that were sent from the client.
     const formData = (await request.formData()).get('cartDetails');
-    if (typeof formData !== 'string') {
-      throw new Error('Invalid form data');
-    }
-    const cartDetails = JSON.parse(formData);
-    let sanityData = await client.fetch(getProducts);
+    const cartEntries = toCartEntries(formData);
+    let sanityData = await getProducts();
     // The POST request is then validated against the data from Sanity.
-    const validatedLineItems = validateCartItems(sanityData, cartDetails) as Array<ValidatedItem>;
+    const validatedLineItems = validateCartItems(sanityData, cartEntries);
     // Create Checkout Sessions from body params.
     const session = await createStripeSession(
       validatedLineItems,
@@ -29,8 +25,10 @@ export const action: ActionFunction = async ({ request }) => {
       `${request.headers.get('origin')}`
     );
     invariant(session.url, 'No redirect url found.');
+    await postOrder(session.id, cartEntries);
     return redirect(session.url);
   } catch (err) {
+    console.error(err);
     return json(err, { status: 500 });
   }
 };
@@ -40,10 +38,8 @@ const CartRoute: FC = () => {
   const { cartDetails, formattedTotalPrice } = useShoppingCart<CartState>();
 
   const handleCheckout = async () => {
-    console.log('submit');
     submit({ cartDetails: JSON.stringify(cartDetails) }, { method: 'post' });
   };
-
   return (
     <article className="max-w-4xl m-auto text-center">
       <h2 className="text-6xl mb-8">Checkout</h2>

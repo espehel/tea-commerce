@@ -1,4 +1,5 @@
 import groq from 'groq';
+import { client } from './client';
 
 export interface Category {
   title: string;
@@ -6,9 +7,10 @@ export interface Category {
   parents: Array<Category>;
 }
 
-export const getCategories = groq`
+export const getCategories = () =>
+  client.fetch<Array<Category>>(groq`
 *[_type=="category"]{
     title,
     description,
     parents
-  }`;
+  }`);

@@ -1,15 +1,14 @@
 import React, { FC, useState } from 'react';
 import Typography from '@mui/joy/Typography';
 import { json, LoaderArgs } from '@remix-run/node';
-import { client } from '../../../lib/sanity/client';
-import { getProductBySKU, Product } from '../../../lib/sanity/simpleProductQuery';
+import { getProductBySKU } from '../../../lib/sanity/simpleProductQuery';
 import { useLoaderData } from '@remix-run/react';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { useShoppingCart } from 'use-shopping-cart';
 import { Button, TextField } from '@mui/joy';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const products = await client.fetch<Array<Product>>(getProductBySKU(params['productId']));
+  const products = await getProductBySKU(params['productId']);
   return json({
     product: products[0],
     ENV: {

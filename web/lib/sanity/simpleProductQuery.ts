@@ -1,6 +1,8 @@
 import groq from 'groq';
+import { client } from './client';
 
 export interface Product {
+  id: string;
   name: string;
   sku: string;
   description: string;
@@ -10,7 +12,8 @@ export interface Product {
   category: Array<any>;
 }
 
-export const getProducts = groq`
+export const getProducts = () =>
+  client.fetch<Array<Product>>(groq`
 *[_type=="simple-product"]{
     name,
     sku,
@@ -20,9 +23,10 @@ export const getProducts = groq`
     "image": image.asset->url,
     currency,
     category
-  }`;
+  }`);
 
-export const getProductBySKU = (sku: string | undefined) => groq`
+export const getProductBySKU = (sku: string | undefined) =>
+  client.fetch<Array<Product>>(groq`
 *[_type=="simple-product" && sku=="${sku}"]{
     name,
     sku,
@@ -32,4 +36,4 @@ export const getProductBySKU = (sku: string | undefined) => groq`
     "image": image.asset->url,
     currency,
     category
-  }`;
+  }`);

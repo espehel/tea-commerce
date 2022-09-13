@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import invariant from 'tiny-invariant';
-import { ValidatedItem } from 'use-shopping-cart/utilities/serverless';
+import { Product } from '../sanity/simpleProductQuery';
+import { CartEntry } from 'use-shopping-cart/core';
 
 const initStripe = () => {
   invariant(process.env.STRIPE_PRIVATE_KEY, 'STRIPE_PRIVATE_KEY not defined.');
@@ -10,8 +11,31 @@ const initStripe = () => {
   });
 };
 
+export const validateCartItems = (
+  inventory: Array<Product>,
+  cart: Array<CartEntry>
+): Array<Stripe.Checkout.SessionCreateParams.LineItem> =>
+  cart.map((cartItem) => {
+    const inventoryItem = inventory.find((inventoryItem) => inventoryItem.id === cartItem.id);
+    if (!inventoryItem) {
+      throw new Error(`Invalid Cart: product with id "${cartItem.id}" is not in your inventory.`);
+    }
+    return {
+      price_data: {
+        currency: inventoryItem.currency,
+        unit_amount: inventoryItem.price,
+        product_data: {
+          name: inventoryItem.name,
+          images: [inventoryItem.image],
+          description: inventoryItem.description,
+        },
+      },
+      quantity: cartItem.quantity,
+    };
+  });
+
 export const createStripeSession = async (
-  line_items: Array<ValidatedItem>,
+  line_items: Array<Stripe.Checkout.SessionCreateParams.LineItem>,
   success_url: string,
   cancel_url: string
 ) => {

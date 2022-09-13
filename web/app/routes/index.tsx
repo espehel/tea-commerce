@@ -2,14 +2,13 @@ import HomeBanner from '~/components/HomeBanner';
 import HomeCategories from '~/components/HomeCategories';
 import HomeProducts from '~/components/HomeProducts';
 import { json, LoaderArgs } from '@remix-run/node';
-import { client } from '../../lib/sanity/client';
-import { getProducts, Product } from '../../lib/sanity/simpleProductQuery';
+import { getProducts } from '../../lib/sanity/simpleProductQuery';
 import { useLoaderData } from '@remix-run/react';
-import { Category, getCategories } from '../../lib/sanity/categoryQuery';
+import { getCategories } from '../../lib/sanity/categoryQuery';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const categories = await client.fetch<Array<Category>>(getCategories);
-  const products = await client.fetch<Array<Product>>(getProducts);
+  const categories = await getCategories();
+  const products = await getProducts();
   return json({
     categories,
     products,
