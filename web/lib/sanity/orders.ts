@@ -3,6 +3,7 @@ import { toOrderline } from './sanity-mapper';
 import Stripe from 'stripe';
 import { CartEntry } from 'use-shopping-cart/core';
 import groq from 'groq';
+import { info } from '../utils/logging';
 
 export interface Orderline {
   productName: string;
@@ -17,18 +18,24 @@ export interface Order {
   orderlines: Array<Orderline>;
 }
 
-export const postOrder = (sessionId: string, cartEntries: Array<CartEntry>) =>
-  client.create<Order>({
+export const postOrder = async (sessionId: string, cartEntries: Array<CartEntry>) => {
+  const result = await client.create<Order>({
     _id: sessionId,
     _type: 'order',
     paymentStatus: 'requires_payment_method',
     emailStatus: 'not_sent',
     orderlines: toOrderline(cartEntries),
   });
+  info('sanity', `Created order ${result._id}`);
+  return result;
+};
 
 export const getOrder = (sessionId: string) =>
   client.fetch<Order>(groq`
 *[_type=="order" && _id=="${sessionId}"][0]{...}`);
 
-export const updateOrder = (sessionId: string, updatededFields: Partial<Order>) =>
-  client.patch(sessionId).set(updatededFields).commit();
+export const updateOrder = async (sessionId: string, updatededFields: Partial<Order>) => {
+  const result = await client.patch(sessionId).set(updatededFields).commit();
+  info('sanity', `Patched order ${result._id}`);
+  return result;
+};

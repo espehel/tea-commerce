@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import invariant from 'tiny-invariant';
 import { Product } from '../sanity/simpleProductQuery';
 import { CartEntry } from 'use-shopping-cart/core';
+import { info } from '../utils/logging';
 
 const initStripe = () => {
   invariant(process.env.STRIPE_PRIVATE_KEY, 'STRIPE_PRIVATE_KEY not defined.');
@@ -40,7 +41,7 @@ export const createStripeSession = async (
   cancel_url: string
 ) => {
   const stripe = initStripe();
-  return stripe.checkout.sessions.create({
+  const session = await stripe.checkout.sessions.create({
     submit_type: 'pay',
     mode: 'payment',
     payment_method_types: ['card'],
@@ -52,6 +53,8 @@ export const createStripeSession = async (
     success_url,
     cancel_url,
   });
+  info('stripe', `Created session ${session.id}`);
+  return session;
 };
 
 export const getStripeSession = async (sessionId: string) => {
@@ -59,7 +62,9 @@ export const getStripeSession = async (sessionId: string) => {
     throw Error('Incorrect CheckoutSession ID.');
   }
   const stripe = initStripe();
-  return stripe.checkout.sessions.retrieve(sessionId, {
+  const session = await stripe.checkout.sessions.retrieve(sessionId, {
     expand: ['payment_intent'],
   });
+  info('stripe', `Retrieved session ${session.id}`);
+  return session;
 };

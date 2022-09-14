@@ -1,6 +1,7 @@
 import Mailjet from 'node-mailjet';
 import invariant from 'tiny-invariant';
 import { StripeConfirmation } from '../stripe/stripe-mapper';
+import { info } from '../utils/logging';
 
 invariant(process.env.MAILJET_PUBLIC_KEY, 'process.env.MAILJET_PUBLIC_KEY is not defined.');
 invariant(process.env.MAILJET_PRIVATE_KEY, 'process.env.MAILJET_PRIVATE_KEY is not defined.');
@@ -31,6 +32,7 @@ export const sendMail = async (confirmation: StripeConfirmation) => {
         },
       ],
     });
+    info('mailjet', `Email sent to ${confirmation.email}`);
     return result;
   } catch (error: any) {
     throw new Error(`Failed to send mail.{ statusCode: ${error.statusCode} }`);
