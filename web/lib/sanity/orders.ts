@@ -2,6 +2,7 @@ import { client } from './client';
 import { toOrderline } from './sanity-mapper';
 import Stripe from 'stripe';
 import { CartEntry } from 'use-shopping-cart/core';
+import groq from 'groq';
 
 export interface Orderline {
   productName: string;
@@ -11,8 +12,8 @@ export interface Orderline {
 
 export interface Order {
   _id: string;
-  paymentStatus: string;
-  emailStatus: string;
+  paymentStatus: Stripe.PaymentIntent.Status;
+  emailStatus: 'not_sent' | 'sent';
   orderlines: Array<Orderline>;
 }
 
@@ -24,3 +25,10 @@ export const postOrder = (sessionId: string, cartEntries: Array<CartEntry>) =>
     emailStatus: 'not_sent',
     orderlines: toOrderline(cartEntries),
   });
+
+export const getOrder = (sessionId: string) =>
+  client.fetch<Order>(groq`
+*[_type=="order" && _id=="${sessionId}"][0]{...}`);
+
+export const updateOrder = (sessionId: string, updatededFields: Partial<Order>) =>
+  client.patch(sessionId).set(updatededFields).commit();

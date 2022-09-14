@@ -6,16 +6,21 @@ import PrintObject from '../components/PrintObject';
 import { getStripeSession } from '../../lib/stripe/stripe.server';
 import { sendMail } from '../../lib/mailjet/mailjet.server';
 import { toStripeConfirmation } from '../../lib/stripe/stripe-mapper';
+import { getOrder, updateOrder } from '../../lib/sanity/orders';
 
 export async function loader({ request }: LoaderArgs) {
   const id = new URL(request.url).searchParams.get('session_id');
   invariant(id, 'Expected search params session_id');
   try {
     const checkoutSession = await getStripeSession(id);
+    const order = await getOrder(id);
     const stripeConfirmation = toStripeConfirmation(checkoutSession);
     invariant(stripeConfirmation, 'Could not map session to StripeConfirmation.');
 
-    await sendMail(stripeConfirmation);
+    if (order.emailStatus === 'not_sent') {
+      await sendMail(stripeConfirmation);
+      await updateOrder(id, { emailStatus: 'sent', paymentStatus: stripeConfirmation.status });
+    }
 
     return json({ checkoutSession, stripeConfirmation });
   } catch (err: any) {

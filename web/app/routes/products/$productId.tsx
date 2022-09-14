@@ -8,9 +8,9 @@ import { useShoppingCart } from 'use-shopping-cart';
 import { Button, TextField } from '@mui/joy';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const products = await getProductBySKU(params['productId']);
+  const product = await getProductBySKU(params['productId']);
   return json({
-    product: products[0],
+    product: product,
     ENV: {
       STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
     },

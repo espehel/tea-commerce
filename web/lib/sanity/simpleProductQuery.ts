@@ -26,8 +26,8 @@ export const getProducts = () =>
   }`);
 
 export const getProductBySKU = (sku: string | undefined) =>
-  client.fetch<Array<Product>>(groq`
-*[_type=="simple-product" && sku=="${sku}"]{
+  client.fetch<Product>(groq`
+*[_type=="simple-product" && sku=="${sku}"][0]{
     name,
     sku,
     description,
