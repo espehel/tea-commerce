@@ -12,9 +12,9 @@ import styles from './styles/app.css';
 import Header from './components/Header';
 import { studioTheme, ThemeProvider } from '@sanity/ui';
 import { CssVarsProvider } from '@mui/joy/styles';
-import CartProvider from '~/contexts/CartProvider';
 import { json } from '@remix-run/node';
 import invariant from 'tiny-invariant';
+import { CartProvider } from './states/cart/CartProvider';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',

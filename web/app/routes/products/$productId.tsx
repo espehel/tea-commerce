@@ -6,6 +6,7 @@ import { useLoaderData } from '@remix-run/react';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { useShoppingCart } from 'use-shopping-cart';
 import { Button, TextField } from '@mui/joy';
+import { useCart } from '~/states/cart/CartProvider';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const product = await getProductBySKU(params['productId']);
@@ -18,7 +19,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 };
 
 const ProductRoute: FC = ({}) => {
-  const { addItem } = useShoppingCart();
+  const { addProduct } = useCart();
   const { product } = useLoaderData<typeof loader>();
   const [quantity, setQuantity] = useState(1);
 
@@ -44,7 +45,9 @@ const ProductRoute: FC = ({}) => {
               defaultValue={quantity}
               onChange={(e) => setQuantity(parseInt(e.currentTarget.value))}
             />
-            <Button onClick={() => addItem(product, { count: quantity })}>Add to cart</Button>
+            <Button onClick={() => addProduct({ id: product.id, product, quantity })}>
+              Add to cart
+            </Button>
           </div>
         </div>
       </div>

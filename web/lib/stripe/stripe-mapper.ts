@@ -1,5 +1,5 @@
 import { Stripe } from 'stripe';
-import { CartEntry } from 'use-shopping-cart/core';
+import { isProductLine, ProductLine } from '~/states/cart/types';
 
 export interface StripeConfirmation {
   email: string;
@@ -7,19 +7,14 @@ export interface StripeConfirmation {
   status: Stripe.PaymentIntent.Status;
 }
 
-const isCartEntry = (value: unknown): value is CartEntry => {
-  const cartEntry = value as CartEntry;
-  return Boolean(
-    cartEntry && cartEntry.id && cartEntry.price && cartEntry.name && cartEntry.quantity
-  );
-};
-
-export const toCartEntries = (formData: FormDataEntryValue | null): Array<CartEntry> => {
+export const toProductLines = (formData: FormDataEntryValue | null): Array<ProductLine> => {
   if (typeof formData === 'string') {
     const parsedData = JSON.parse(formData);
-    const cartEntries = Object.values(parsedData).filter(isCartEntry);
-    if (cartEntries.length > 0) {
-      return cartEntries;
+    if (Array.isArray(parsedData)) {
+      const productLines = parsedData.filter(isProductLine);
+      if (productLines.length > 0) {
+        return productLines;
+      }
     }
   }
   throw new Error('Invalid form data');

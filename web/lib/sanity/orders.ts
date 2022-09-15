@@ -1,9 +1,9 @@
 import { client } from './client';
 import { toOrderline } from './sanity-mapper';
 import Stripe from 'stripe';
-import { CartEntry } from 'use-shopping-cart/core';
 import groq from 'groq';
 import { info } from '../utils/logging';
+import { ProductLine } from '~/states/cart/types';
 
 export interface Orderline {
   productName: string;
@@ -18,13 +18,13 @@ export interface Order {
   orderlines: Array<Orderline>;
 }
 
-export const postOrder = async (sessionId: string, cartEntries: Array<CartEntry>) => {
+export const postOrder = async (sessionId: string, productLines: Array<ProductLine>) => {
   const result = await client.create<Order>({
     _id: sessionId,
     _type: 'order',
     paymentStatus: 'requires_payment_method',
     emailStatus: 'not_sent',
-    orderlines: toOrderline(cartEntries),
+    orderlines: toOrderline(productLines),
   });
   info('sanity', `Created order ${result._id}`);
   return result;

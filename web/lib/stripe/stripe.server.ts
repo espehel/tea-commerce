@@ -1,8 +1,8 @@
 import Stripe from 'stripe';
 import invariant from 'tiny-invariant';
 import { Product } from '../sanity/simpleProductQuery';
-import { CartEntry } from 'use-shopping-cart/core';
 import { info } from '../utils/logging';
+import { ProductLine } from '~/states/cart/types';
 
 const initStripe = () => {
   invariant(process.env.STRIPE_PRIVATE_KEY, 'STRIPE_PRIVATE_KEY not defined.');
@@ -14,7 +14,7 @@ const initStripe = () => {
 
 export const validateCartItems = (
   inventory: Array<Product>,
-  cart: Array<CartEntry>
+  cart: Array<ProductLine>
 ): Array<Stripe.Checkout.SessionCreateParams.LineItem> =>
   cart.map((cartItem) => {
     const inventoryItem = inventory.find((inventoryItem) => inventoryItem.id === cartItem.id);

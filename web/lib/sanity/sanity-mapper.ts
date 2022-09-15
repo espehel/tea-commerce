@@ -1,9 +1,9 @@
 import { Orderline } from './orders';
-import { CartEntry } from 'use-shopping-cart/core';
+import { ProductLine } from '~/states/cart/types';
 
-export const toOrderline = (cartEntries: Array<CartEntry>): Array<Orderline> =>
-  cartEntries.map((entry) => ({
-    productName: entry.name,
-    productRef: { _type: 'reference', _ref: entry.id },
-    _key: entry.id,
+export const toOrderline = (productLines: Array<ProductLine>): Array<Orderline> =>
+  productLines.map((productLine) => ({
+    productName: productLine.product.name,
+    productRef: { _type: 'reference', _ref: productLine.id },
+    _key: productLine.id,
   }));
