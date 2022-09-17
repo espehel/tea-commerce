@@ -1,6 +1,11 @@
 import { useCallback, useReducer } from 'react';
 import { ProductLine } from './types';
 
+interface CartAction {
+  type: 'set';
+  cart: CartState;
+}
+
 interface OrderAction {
   type: 'add' | 'remove' | 'update';
   line: ProductLine;
@@ -10,8 +15,11 @@ export interface CartState {
   productLines: Array<ProductLine>;
 }
 
-const reducer = (state: CartState, action: OrderAction): CartState => {
+const reducer = (state: CartState, action: OrderAction | CartAction): CartState => {
   switch (action.type) {
+    case 'set': {
+      return action.cart;
+    }
     case 'add': {
       if (state.productLines.some((line) => line.id === action.line.id)) {
         return {
@@ -63,5 +71,8 @@ export const useCartReducer = () => {
   const addProduct = useCallback((line: ProductLine) => {
     dispatch({ type: 'add', line });
   }, []);
-  return { cart, updateProduct, removeProduct, addProduct };
+  const setCart = useCallback((cart: CartState) => {
+    dispatch({ type: 'set', cart });
+  }, []);
+  return { cart, updateProduct, removeProduct, addProduct, setCart };
 };

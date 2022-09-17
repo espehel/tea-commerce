@@ -4,7 +4,6 @@ import { json, LoaderArgs } from '@remix-run/node';
 import { getProductBySKU } from '../../../lib/sanity/simpleProductQuery';
 import { useLoaderData } from '@remix-run/react';
 import AspectRatio from '@mui/joy/AspectRatio';
-import { useShoppingCart } from 'use-shopping-cart';
 import { Button, TextField } from '@mui/joy';
 import { useCart } from '~/states/cart/CartProvider';
 
