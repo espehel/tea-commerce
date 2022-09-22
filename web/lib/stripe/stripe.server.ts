@@ -24,7 +24,7 @@ export const validateCartItems = (
     return {
       price_data: {
         currency: inventoryItem.currency,
-        unit_amount: inventoryItem.price,
+        unit_amount: parseInt((inventoryItem.price * 100).toString()),
         product_data: {
           name: inventoryItem.name,
           images: [inventoryItem.image],

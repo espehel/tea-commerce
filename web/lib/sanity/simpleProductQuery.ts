@@ -9,7 +9,7 @@ export interface Product {
   price: number;
   image: string;
   currency: string;
-  category: Array<any>;
+  categories: Array<string>;
 }
 
 export const getProducts = () =>
@@ -22,7 +22,7 @@ export const getProducts = () =>
     "id": _id,
     "image": image.asset->url,
     currency,
-    category
+    "categories": categories[]->title
   }`);
 
 export const getProductBySKU = (sku: string | undefined) =>
@@ -35,5 +35,5 @@ export const getProductBySKU = (sku: string | undefined) =>
     "id": _id,
     "image": image.asset->url,
     currency,
-    category
+    "categories": categories[]->title
   }`);

@@ -5,6 +5,7 @@ import Card from '@mui/joy/Card';
 import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
+import { formatNok } from '../../lib/utils/format';
 
 interface Props {
   products: Array<Product>;
@@ -40,7 +41,7 @@ const HomeProducts: FC<Props> = ({ products }) => {
                   <Typography level="h2" fontSize="lg" textColor="#fff" mb={1}>
                     {product.name}
                   </Typography>
-                  <Typography textColor="neutral.300">{product.price},-</Typography>
+                  <Typography textColor="neutral.300">{formatNok(product.price)}</Typography>
                 </CardContent>
               </Card>
             </Link>

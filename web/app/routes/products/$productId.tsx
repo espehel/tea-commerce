@@ -6,6 +6,7 @@ import { useLoaderData } from '@remix-run/react';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { Button, TextField } from '@mui/joy';
 import { useCart } from '~/states/cart/CartProvider';
+import { formatNok } from '../../../lib/utils/format';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const product = await getProductBySKU(params['productId']);
@@ -33,7 +34,7 @@ const ProductRoute: FC = ({}) => {
         </AspectRatio>
         <div>
           <Typography level="h5" component="p">
-            {product.price},-
+            {formatNok(product.price)}
           </Typography>
           <Typography level="h3">{product.name}</Typography>
           <Typography component="p">{product.description}</Typography>
