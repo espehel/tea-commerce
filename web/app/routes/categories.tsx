@@ -30,12 +30,12 @@ function Categories() {
         Categories
       </Typography>
       {categories.map(({ title }) => (
-        <section className="mt-8">
+        <section key={title} className="mt-8">
           <div className="flex justify-between">
             <Typography level="h3" component="h3">
               {title}
             </Typography>
-            <Link className="outline-button" to="/products">
+            <Link className="outline-button" to={`/products?category=${title}`}>
               See all
             </Link>
           </div>

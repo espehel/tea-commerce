@@ -25,6 +25,19 @@ export const getProducts = () =>
     "categories": categories[]->title
   }`);
 
+export const getProductsByCategory = (category: string) =>
+  client.fetch<Array<Product>>(groq`
+*[_type=="simple-product" && "${category}" in categories[]->title]{
+    name,
+    sku,
+    description,
+    price,
+    "id": _id,
+    "image": image.asset->url,
+    currency,
+    "categories": categories[]->title
+  }`);
+
 export const getProductBySKU = (sku: string | undefined) =>
   client.fetch<Product>(groq`
 *[_type=="simple-product" && sku=="${sku}"][0]{

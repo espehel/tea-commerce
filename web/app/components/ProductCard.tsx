@@ -12,10 +12,18 @@ import { useFavorite } from '~/states/favorite/favorite-hooks';
 
 interface Props {
   product: Product;
+  onFavoriteToggled?: () => void;
 }
 
-const ProductCard: FC<Props> = ({ product }) => {
-  const { isFavorite, toggleFavourite } = useFavorite(product);
+const ProductCard: FC<Props> = ({ product, onFavoriteToggled }) => {
+  const { isFavorite, toggleFavorite } = useFavorite(product);
+
+  const handleFavoriteToggled = () => {
+    toggleFavorite();
+    if (onFavoriteToggled) {
+      onFavoriteToggled();
+    }
+  };
 
   return (
     <Card variant="outlined">
@@ -31,7 +39,7 @@ const ProductCard: FC<Props> = ({ product }) => {
         color="neutral"
         size="sm"
         sx={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}
-        onClick={toggleFavourite}
+        onClick={handleFavoriteToggled}
       >
         {isFavorite ? <HeartFilledIcon color="red" /> : <HeartIcon />}
       </IconButton>

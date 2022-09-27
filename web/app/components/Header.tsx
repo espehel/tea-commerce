@@ -1,8 +1,11 @@
 import React, { FC } from 'react';
-import { Link, NavLink } from '@remix-run/react';
-import { HeartIcon, SearchIcon, TrolleyIcon } from '@sanity/icons';
+import { Link, NavLink, useSearchParams } from '@remix-run/react';
+import { HeartFilledIcon, HeartIcon, SearchIcon, TrolleyIcon } from '@sanity/icons';
 
 const Header: FC = () => {
+  const [searchParams] = useSearchParams();
+  const categoryQueryParam = searchParams.get('category');
+
   return (
     <header className="flex justify-between items-center h-20 max-w-4xl m-auto">
       <h1 className="text-2xl bold">Tea Commerce</h1>
@@ -30,7 +33,9 @@ const Header: FC = () => {
       </nav>
       <div className="flex gap-2 text-2xl">
         <SearchIcon />
-        <HeartIcon />
+        <Link to="/products?category=favorites">
+          {categoryQueryParam === 'favorites' ? <HeartFilledIcon color="red" /> : <HeartIcon />}
+        </Link>
         <Link to="/cart">
           <TrolleyIcon />
         </Link>

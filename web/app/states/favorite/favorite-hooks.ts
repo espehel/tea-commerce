@@ -10,7 +10,7 @@ export const useFavorite = (product: Product) => {
     setFavorite(favorites.includes(product.sku));
   }, [product]);
 
-  const toggleFavourite = useCallback(() => {
+  const toggleFavorite = useCallback(() => {
     const favorites = getItemFromLocalStorage<Array<string>>('tea-commerce.favorites') || [];
     if (favorites.includes(product.sku)) {
       setItemToLocalStorage(
@@ -23,5 +23,21 @@ export const useFavorite = (product: Product) => {
       setFavorite(true);
     }
   }, []);
-  return { isFavorite, toggleFavourite };
+  return { isFavorite, toggleFavorite };
+};
+
+export const useFavoritedProducts = (products: Array<Product>) => {
+  const [favoritedProducts, setFavoritedProducts] = useState(products);
+
+  useEffect(() => {
+    const favorites = getItemFromLocalStorage<Array<string>>('tea-commerce.favorites') || [];
+    setFavoritedProducts(products.filter((product) => favorites.includes(product.sku)));
+  }, [products]);
+
+  const refreshFavorites = useCallback(() => {
+    const favorites = getItemFromLocalStorage<Array<string>>('tea-commerce.favorites') || [];
+    setFavoritedProducts(products.filter((product) => favorites.includes(product.sku)));
+  }, []);
+
+  return { favoritedProducts, refreshFavorites };
 };
