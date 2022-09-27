@@ -1,7 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import AspectRatio from '@mui/joy/AspectRatio';
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
@@ -9,7 +8,6 @@ import { HeartFilledIcon, HeartIcon } from '@sanity/icons';
 import { Product } from '../../lib/sanity/simpleProductQuery';
 import { Link } from '@remix-run/react';
 import { formatNok } from '../../lib/utils/format';
-import { getItemFromLocalStorage, setItemToLocalStorage } from '../../lib/utils/localstorage';
 import { useFavorite } from '~/states/favorite/favorite-hooks';
 
 interface Props {
