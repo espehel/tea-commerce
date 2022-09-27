@@ -38,6 +38,24 @@ export const getProductsByCategory = (category: string) =>
     "categories": categories[]->title
   }`);
 
+export const getProductsByMatch = (term: string) =>
+  client.fetch<Array<Product>>(groq`
+*[_type == "simple-product"] 
+  | score(name match "${term}" || description match "${term}") 
+  [ _score > 0 ]
+  | order(_score desc) 
+  {
+    name,
+    sku,
+    description,
+    price,
+    "id": _id,
+    "image": image.asset->url,
+    currency,
+    "categories": categories[]->title,
+    _score
+  }`);
+
 export const getProductBySKU = (sku: string | undefined) =>
   client.fetch<Product>(groq`
 *[_type=="simple-product" && sku=="${sku}"][0]{

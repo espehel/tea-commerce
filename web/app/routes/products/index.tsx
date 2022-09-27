@@ -2,6 +2,7 @@ import { json, LoaderArgs } from '@remix-run/node';
 import {
   getProducts,
   getProductsByCategory,
+  getProductsByMatch,
   Product,
 } from '../../../lib/sanity/simpleProductQuery';
 import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react';
@@ -13,10 +14,13 @@ import { useFavoritedProducts } from '~/states/favorite/favorite-hooks';
 
 export const loader = async ({ request }: LoaderArgs) => {
   const category = new URL(request.url).searchParams.get('category');
+  const search = new URL(request.url).searchParams.get('search');
   const categories = await getCategories();
 
   let products: Array<Product>;
-  if (category && categories.some(({ title }) => title === category)) {
+  if (search) {
+    products = await getProductsByMatch(search);
+  } else if (category && categories.some(({ title }) => title === category)) {
     products = await getProductsByCategory(category);
   } else {
     products = await getProducts();
