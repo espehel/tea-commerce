@@ -2,10 +2,15 @@ import React, { FC } from 'react';
 import { Link, NavLink, useSearchParams } from '@remix-run/react';
 import { HeartFilledIcon, HeartIcon, SearchIcon, TrolleyIcon } from '@sanity/icons';
 import SearchForm from '~/components/SearchForm';
+import { useCart } from '~/states/cart/CartProvider';
+import Typography from '@mui/joy/Typography';
+import { sumQuantity } from '../../lib/utils/cart';
 
 const Header: FC = () => {
   const [searchParams] = useSearchParams();
+  const { cart } = useCart();
   const categoryQueryParam = searchParams.get('category');
+  const cartQuantity = cart.productLines.reduce(sumQuantity, 0) || null;
 
   return (
     <header className="grid grid-cols-3 items-center h-20 max-w-4xl m-auto">
@@ -37,8 +42,8 @@ const Header: FC = () => {
         <Link to="/products?category=favorites">
           {categoryQueryParam === 'favorites' ? <HeartFilledIcon color="red" /> : <HeartIcon />}
         </Link>
-        <Link to="/cart">
-          <TrolleyIcon />
+        <Link className="flex" to="/cart">
+          <TrolleyIcon /> <Typography>{cartQuantity}</Typography>
         </Link>
       </div>
     </header>

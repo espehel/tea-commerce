@@ -47,7 +47,7 @@ export default function App() {
       <body>
         <CssVarsProvider>
           <ThemeProvider theme={studioTheme}>
-            <CartProvider stripePublicKey={ENV.STRIPE_PUBLIC_KEY}>
+            <CartProvider>
               <Header />
               <main>
                 <Outlet />

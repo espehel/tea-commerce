@@ -8,6 +8,8 @@ import { createStripeSession, validateCartItems } from '../../lib/stripe/stripe.
 import { postOrder } from '../../lib/sanity/orders';
 import { toProductLines } from '../../lib/stripe/stripe-mapper';
 import { useCart } from '~/states/cart/CartProvider';
+import ProductLine from '~/components/cart/ProductLine';
+import { sumQuantity } from '../../lib/utils/cart';
 
 export const action: ActionFunction = async ({ request }) => {
   try {
@@ -34,29 +36,38 @@ export const action: ActionFunction = async ({ request }) => {
 
 const CartRoute: FC = () => {
   const submit = useSubmit();
-  const { cart, formattedTotalPrice } = useCart();
+  const { cart, formattedTotalPrice, resetCart } = useCart();
 
   const handleCheckout = async () => {
     submit({ cart: JSON.stringify(cart.productLines) }, { method: 'post' });
   };
+
+  const totalQuantity = cart.productLines.reduce(sumQuantity, 0);
+
   return (
     <article className="max-w-4xl m-auto text-center">
       <h2 className="text-6xl mb-8">Checkout</h2>
       <section className="text-left bg-lime-900 text-white w-full p-8">
         <h3 className="text-3xl mb-4">Your order</h3>
         <ul className="divide-y border-b pb-2 mb-4">
-          {cart.productLines.map(({ product }) => (
-            <li key={product.id} className="grid grid-cols-2 py-2">
-              <p className="">{product.name}</p>
-              <p className="">{product.price}</p>
-            </li>
-          ))}
-          <li className="grid grid-cols-2 py-2">
-            <p>Subtotal: </p>
-            <p>{formattedTotalPrice}</p>
+          <li className="grid grid-cols-12 py-2">
+            <p className="col-span-1">Quantity</p>
+            <p className="col-span-8">Product</p>
+            <p className="col-span-1">Price</p>
+            <p className="col-span-1">Total</p>
           </li>
+          {cart.productLines.map((productLine) => (
+            <ProductLine productLine={productLine} />
+          ))}
         </ul>
-        <Button onClick={handleCheckout}>Place order</Button>
+        <div className="text-right py-2">
+          <p>{`${totalQuantity} products`}</p>
+          <p>Subtotal: {formattedTotalPrice}</p>
+        </div>
+        <div className="flex justify-between">
+          <Button onClick={resetCart}>Empty cart</Button>
+          <Button onClick={handleCheckout}>Place order</Button>
+        </div>
       </section>
     </article>
   );

@@ -74,5 +74,8 @@ export const useCartReducer = () => {
   const setCart = useCallback((cart: CartState) => {
     dispatch({ type: 'set', cart });
   }, []);
-  return { cart, updateProduct, removeProduct, addProduct, setCart };
+  const resetCart = useCallback(() => {
+    dispatch({ type: 'set', cart: INITIAL_CART });
+  }, []);
+  return { cart, updateProduct, removeProduct, addProduct, setCart, resetCart };
 };

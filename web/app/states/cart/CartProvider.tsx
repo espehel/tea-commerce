@@ -9,16 +9,15 @@ interface ContextValue {
   cart: CartState;
   formattedTotalPrice: string;
   addProduct: (productLine: ProductLine) => void;
-}
-
-interface Props {
-  stripePublicKey: string;
+  removeProduct: (productLine: ProductLine) => void;
+  updateProduct: (productLine: ProductLine) => void;
+  resetCart: () => void;
 }
 
 export const CartContext = createContext<ContextValue | undefined>(undefined);
 
-export const CartProvider: FC<Props> = ({ stripePublicKey, children }) => {
-  const { cart, addProduct, setCart } = useCartReducer();
+export const CartProvider: FC = ({ children }) => {
+  const { cart, addProduct, removeProduct, updateProduct, setCart, resetCart } = useCartReducer();
 
   const formattedTotalPrice = useFormattedTotalPrice(cart);
 
@@ -40,6 +39,9 @@ export const CartProvider: FC<Props> = ({ stripePublicKey, children }) => {
       cart,
       formattedTotalPrice,
       addProduct,
+      resetCart,
+      removeProduct,
+      updateProduct,
     }),
     [cart]
   );
