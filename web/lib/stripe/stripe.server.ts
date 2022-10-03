@@ -68,3 +68,13 @@ export const getStripeSession = async (sessionId: string) => {
   info('stripe', `Retrieved session ${session.id}`);
   return session;
 };
+
+export const getStripeSessionLineItems = async (sessionId: string) => {
+  if (!sessionId.startsWith('cs_')) {
+    throw Error('Incorrect CheckoutSession ID.');
+  }
+  const stripe = initStripe();
+  const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
+  info('stripe', `Retrieved ${lineItems.data.length} line items.`);
+  return lineItems.data;
+};

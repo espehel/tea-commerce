@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect, useMemo } from 'react';
+import { createContext, FC, useCallback, useContext, useEffect, useMemo } from 'react';
 import { CartState, useCartReducer } from '~/states/cart/cart-reducer';
 import invariant from 'tiny-invariant';
 import { useFormattedTotalPrice } from '~/states/cart/cart-hooks';
@@ -21,6 +21,11 @@ export const CartProvider: FC = ({ children }) => {
 
   const formattedTotalPrice = useFormattedTotalPrice(cart);
 
+  const handleResetCart = useCallback(() => {
+    setItemToLocalStorage('tea-commerce.product-lines', []);
+    resetCart();
+  }, []);
+
   useEffect(() => {
     if (cart.productLines.length === 0) {
       const productLines = getItemFromLocalStorage<Array<ProductLine>>(
@@ -39,7 +44,7 @@ export const CartProvider: FC = ({ children }) => {
       cart,
       formattedTotalPrice,
       addProduct,
-      resetCart,
+      resetCart: handleResetCart,
       removeProduct,
       updateProduct,
     }),

@@ -57,7 +57,7 @@ const CartRoute: FC = () => {
             <p className="col-span-1">Total</p>
           </li>
           {cart.productLines.map((productLine) => (
-            <ProductLine productLine={productLine} />
+            <ProductLine key={productLine.id} productLine={productLine} />
           ))}
         </ul>
         <div className="text-right py-2">

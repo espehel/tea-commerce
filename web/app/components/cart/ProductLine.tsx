@@ -3,6 +3,7 @@ import { ProductLine } from '~/states/cart/types';
 import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from '@sanity/icons';
 import { formatNok } from '../../../lib/utils/format';
 import { useCart } from '~/states/cart/CartProvider';
+import { Link } from '@remix-run/react';
 
 interface Props {
   productLine: ProductLine;
@@ -33,7 +34,9 @@ const ProductLine: FC<Props> = ({ productLine }) => {
           onClick={() => incrementProductLine(+1)}
         />
       </div>
-      <p className="col-span-8">{product.name}</p>
+      <Link className="col-span-8 hover:underline" to={`/products/${product.sku}`}>
+        <p>{product.name}</p>
+      </Link>
       <p className="col-span-1">{formatNok(product.price)}</p>
       <p className="col-span-1">{formatNok(product.price * quantity)}</p>
       <TrashIcon
