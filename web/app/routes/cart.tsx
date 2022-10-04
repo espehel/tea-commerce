@@ -47,9 +47,9 @@ const CartRoute: FC = () => {
   return (
     <article className="max-w-4xl m-auto text-center">
       <h2 className="text-6xl mb-8">Checkout</h2>
-      <section className="text-left bg-lime-900 text-white w-full p-8">
+      <section className="text-left w-full border rounded p-8">
         <h3 className="text-3xl mb-4">Your order</h3>
-        <ul className="divide-y border-b pb-2 mb-4">
+        <ul className="divide-y border-b mb-4">
           <li className="grid grid-cols-12 py-2">
             <p className="col-span-1">Quantity</p>
             <p className="col-span-8">Product</p>
@@ -65,8 +65,12 @@ const CartRoute: FC = () => {
           <p>Subtotal: {formattedTotalPrice}</p>
         </div>
         <div className="flex justify-between">
-          <Button onClick={resetCart}>Empty cart</Button>
-          <Button onClick={handleCheckout}>Place order</Button>
+          <button className="outline-button" onClick={resetCart}>
+            Empty cart
+          </button>
+          <button className="filled-button" onClick={handleCheckout}>
+            Place order
+          </button>
         </div>
       </section>
     </article>

@@ -23,7 +23,7 @@ const HomeCategories: FC<Props> = ({ categories }) => {
       <ul className="grid grid-cols-4 gap-4 mt-4">
         {categories.slice(0, 8).map((category) => (
           <li key={category.title}>
-            <Link to="/">
+            <Link to={`/products?category=${category.title}`}>
               <Card padding={[4]} radius={[4]} tone="positive">
                 <Text align="center">{category.title}</Text>
               </Card>

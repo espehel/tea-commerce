@@ -4,7 +4,7 @@ import { json, LoaderArgs } from '@remix-run/node';
 import { getProductBySKU } from '../../../lib/sanity/simpleProductQuery';
 import { useLoaderData } from '@remix-run/react';
 import AspectRatio from '@mui/joy/AspectRatio';
-import { Button, TextField } from '@mui/joy';
+import { TextField } from '@mui/joy';
 import { useCart } from '~/states/cart/CartProvider';
 import { formatNok } from '../../../lib/utils/format';
 
@@ -45,9 +45,12 @@ const ProductRoute: FC = ({}) => {
               defaultValue={quantity}
               onChange={(e) => setQuantity(parseInt(e.currentTarget.value))}
             />
-            <Button onClick={() => addProduct({ id: product.id, product, quantity })}>
+            <button
+              className="filled-button"
+              onClick={() => addProduct({ id: product.id, product, quantity })}
+            >
               Add to cart
-            </Button>
+            </button>
           </div>
         </div>
       </div>
